@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    MeshRenderer meshRenderer;
     public GameObject playerBulletPrefab;
     public Transform shotPoint;
+    public GameObject manager;
 
     private float horizontal;
     private float vertical;
@@ -21,10 +23,12 @@ public class PlayerScript : MonoBehaviour
     //ÁÂ -x
     //¿ì x
     public int score;
-    public int life;
+    public int hp = 100;
+    public int pain = 100;
 
     private void Start()
     {
+        meshRenderer = GetComponent<MeshRenderer>();
         min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0));
         max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0));
 
@@ -41,6 +45,7 @@ public class PlayerScript : MonoBehaviour
 
             shotDelay = 0f;
         }
+        print(meshRenderer.material.color + ".....");
     }
 
     void PlayerMove()
@@ -64,12 +69,36 @@ public class PlayerScript : MonoBehaviour
         transform.position = new Vector3(newX, newY, transform.position.z);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collision)
     {
+        GameManager managerScript = manager.GetComponent<GameManager>();
         print("Àû ÃÑ¾Ë¿¡ ¸Â°Å³ª ÀÚÆøÇÔ");
 
-        Destroy(other.gameObject);
-        Destroy(gameObject);
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
+        {
+            hp -= 15;
+            managerScript.UpdateHpSlider(hp);
+            if (hp <= 0)
+            {
+                print("ºñÇà±â ÆÄ±«µÊ");
+                managerScript.GameOver();
+                Destroy(gameObject);
+            }
+            else
+            {
+                //ÇÃ·¹ÀÌ¾î ±ôºý°Å¸² ¹«Àû½Ã°£ 3ÃÊ
+
+                meshRenderer.material = Resources.Load<Material>("Materials/Damaged");
+                Invoke("ReturnMaterial", 0.1f);
+            }
+            Destroy(collision.gameObject);
+        }
         
+        
+    }
+
+    void ReturnMaterial()
+    {
+        meshRenderer.material = Resources.Load<Material>("Materials/StarSparrow_White");
     }
 }

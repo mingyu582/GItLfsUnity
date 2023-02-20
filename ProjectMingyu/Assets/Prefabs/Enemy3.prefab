@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 2857894981396814422}
   - component: {fileID: 21883656861101724}
   - component: {fileID: 6902366037097754535}
-  m_Layer: 0
+  - component: {fileID: -317185740794090458}
+  m_Layer: 6
   m_Name: Enemy3
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,3 +96,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 9.271937, y: 2.724739, z: 12.2177515}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-317185740794090458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967302699866656585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42951a8de188e54186523c362549b2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyBullet: {fileID: 1656205560423842, guid: 2d009ca22ab0fc141ade283e835e506a, type: 3}
+  type: 3

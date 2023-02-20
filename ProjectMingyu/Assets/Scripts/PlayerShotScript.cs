@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 public class PlayerShotScript : MonoBehaviour
 {
@@ -14,4 +15,7 @@ public class PlayerShotScript : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    
+
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4254831724542706}
   - component: {fileID: 33636701486100218}
   - component: {fileID: 23108580484060614}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlyingInsects3_Wing3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 4072595153639120}
   - component: {fileID: 33486108100115706}
   - component: {fileID: 23116110202944804}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlyingInsects3_Wing4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 4501185454678114}
   - component: {fileID: 33059457709192364}
   - component: {fileID: 23864261778404826}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlyingInsects3_Wing1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 4993088256641462}
   - component: {fileID: 33090879432451406}
   - component: {fileID: 23583332831614426}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlyingInsects3_Wing2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,9 +336,11 @@ GameObject:
   - component: {fileID: 33584108101738518}
   - component: {fileID: 23402522611037656}
   - component: {fileID: 5278182431240035892}
-  m_Layer: 0
+  - component: {fileID: -7072092718521134740}
+  - component: {fileID: 8075863154154376367}
+  m_Layer: 6
   m_Name: Enemy2
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -350,7 +352,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724874857677222}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
@@ -360,7 +362,7 @@ Transform:
   - {fileID: 4072595153639120}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
 --- !u!33 &33584108101738518
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -418,8 +420,38 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724874857677222}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 5, y: 5.651716, z: 6.761685}
   m_Center: {x: 0.00000035762787, y: -1.3658175, z: 0}
+--- !u!114 &-7072092718521134740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724874857677222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42951a8de188e54186523c362549b2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyBullet: {fileID: 1656205560423842, guid: 2d009ca22ab0fc141ade283e835e506a, type: 3}
+  type: 2
+--- !u!54 &8075863154154376367
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724874857677222}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

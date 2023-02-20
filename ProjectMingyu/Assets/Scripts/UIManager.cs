@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -13,8 +14,11 @@ public class UIManager : MonoBehaviour
     public GameObject controlPanelGroup;
     public GameObject itemPanelGroup;
     public GameObject contents;
+    public GameObject rankingPanel;
+    
 
-
+    
+    
     public void OnClickStartButton()
     {
         SceneManager.LoadScene("LoadingScene");
@@ -28,6 +32,7 @@ public class UIManager : MonoBehaviour
     public void BackToMenu()
     {
         helpPanel.SetActive(false);
+        rankingPanel.SetActive(false);
         title.SetActive(true);
     }
     public void BackToHelpMenu()
@@ -66,4 +71,11 @@ public class UIManager : MonoBehaviour
     {
         Application.Quit();
     }
+    public void OnClickRankingButton()
+    {
+        rankingPanel.SetActive(true);
+        title.SetActive(false);
+    }
+
+
 }

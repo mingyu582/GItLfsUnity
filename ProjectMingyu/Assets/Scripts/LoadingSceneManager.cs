@@ -23,6 +23,7 @@ public class LoadingSceneManager : MonoBehaviour
     {
         StartCoroutine(LoadSceneProcess());
     }
+    
 
     IEnumerator LoadSceneProcess()
     {
