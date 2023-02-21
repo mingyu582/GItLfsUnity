@@ -26,10 +26,18 @@ public class GameManager : MonoBehaviour
     public Slider painSlider;
     public Text painText;
 
+    public GameObject pausePanel;
+    public Text BGMValueText;
+    public Text SFXValueText;
+
     private void Awake()
     {
         player = GameObject.Find("Player");
         spawnList = new List<Spawn>();
+    }
+    private void Start()
+    {
+        pausePanel.SetActive(false);
     }
     private void Update()
     {
@@ -37,13 +45,32 @@ public class GameManager : MonoBehaviour
 
         UpdateUI();
         CreateFallingObject();
+        ReadSpawnFile();
         if (curSpawnDelay > nextSpawnDelay && !spawnEnd)
         {
             SpawnEnemy();
             curSpawnDelay = 0;
         }
-        ReadSpawnFile();
+
+        //pause panel
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pausePanel.SetActive(true);
+            Time.timeScale = 0f;
+        }
     }
+
+    public void OnClickTitle()
+    {
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene("MainScene");
+    }
+    public void OnClickBack()
+    {
+        pausePanel.SetActive(false);
+        Time.timeScale = 1.0f;
+    }
+
 
     void ReadSpawnFile()
     {
@@ -51,13 +78,13 @@ public class GameManager : MonoBehaviour
         spawnIndex = 0;
         spawnEnd = false;
 
-        TextAsset textFile = Resources.Load("stage0") as TextAsset;
+        TextAsset textFile = Resources.Load("Stage 0") as TextAsset;
         StringReader stringReader = new StringReader(textFile.text);
 
         while (stringReader != null)
         {
             string line = stringReader.ReadLine();
-            print(line);
+            print("line: "+line);
 
             if (line == null)
             {
@@ -68,6 +95,7 @@ public class GameManager : MonoBehaviour
             spawnData.type = line.Split(',')[1];
             spawnData.point = int.Parse(line.Split(',')[2]);
             spawnList.Add(spawnData);
+            print(spawnData+"dlcksrbqudtls");
         }
 
         stringReader.Close();
@@ -100,8 +128,9 @@ public class GameManager : MonoBehaviour
         painSlider.value = pain;
         painText.text = "PAIN : " + pain + " / 100";
     }
-    public void GameOver()
+    public void GameOver(int score)
     {
+        DataManager.curScore= score;
         SceneManager.LoadScene("GameOverScene");
     }
 
@@ -114,6 +143,7 @@ public class GameManager : MonoBehaviour
         }
         
     }
+    
     void SpawnEnemy()
     {
         int enemyIndex = 0;
@@ -148,4 +178,5 @@ public class GameManager : MonoBehaviour
         }
         nextSpawnDelay = spawnList[spawnIndex].delay;
     }
+
 }

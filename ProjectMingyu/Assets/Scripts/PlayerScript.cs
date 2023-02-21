@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    public AudioClip clip;
     MeshRenderer meshRenderer;
     public GameObject playerBulletPrefab;
     public Transform shotPoint;
@@ -41,6 +42,7 @@ public class PlayerScript : MonoBehaviour
         shotDelay += Time.deltaTime;
         if (Input.GetKey(KeyCode.J) && shotDelay >= maxShotDelay)
         {
+            SoundManager.instance.SFXPlay("PlayerShot",clip);
             Instantiate(playerBulletPrefab, shotPoint.position, Quaternion.Euler(-90.0f, 0, 0));
 
             shotDelay = 0f;
@@ -81,7 +83,9 @@ public class PlayerScript : MonoBehaviour
             if (hp <= 0)
             {
                 print("ºñÇà±â ÆÄ±«µÊ");
-                managerScript.GameOver();
+                print(score);
+                DataManager.curScore = score;
+                managerScript.GameOver(score);
                 Destroy(gameObject);
             }
             else
