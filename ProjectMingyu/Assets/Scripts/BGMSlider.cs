@@ -17,7 +17,7 @@ public class BGMSlider : MonoBehaviour
         bgVolume = PlayerPrefs.GetFloat("BGSoundVolume", 1f);
         bgmSlider.value = bgVolume;
         mixer.SetFloat("BGSoundVolume", Mathf.Log10((bgVolume) * 20));
-        SoundManager.instance.SetBGSoundVolume(bgVolume);
+        //SoundManager.instance.SetBGSoundVolume(bgVolume);
     }
     private void Update()
     {

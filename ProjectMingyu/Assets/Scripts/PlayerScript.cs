@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    public AudioClip clip;
+    public AudioClip shotClip;
+    public AudioClip damagedClip;
     MeshRenderer meshRenderer;
     public GameObject playerBulletPrefab;
     public Transform shotPoint;
@@ -27,6 +28,8 @@ public class PlayerScript : MonoBehaviour
     public int hp = 100;
     public int pain = 100;
 
+    public bool isRespawnTime;
+
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -42,13 +45,13 @@ public class PlayerScript : MonoBehaviour
         shotDelay += Time.deltaTime;
         if (Input.GetKey(KeyCode.J) && shotDelay >= maxShotDelay)
         {
-            SoundManager.instance.SFXPlay("PlayerShot",clip);
+            SoundManager.instance.SFXPlay("PlayerShot", shotClip);
             Instantiate(playerBulletPrefab, shotPoint.position, Quaternion.Euler(-90.0f, 0, 0));
 
             shotDelay = 0f;
         }
-        print(meshRenderer.material.color + ".....");
     }
+    
 
     void PlayerMove()
     {
@@ -73,11 +76,13 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
+        if (isRespawnTime) //무적 시간이면 적에게 맞지 않음
+            return;
         GameManager managerScript = manager.GetComponent<GameManager>();
-        print("적 총알에 맞거나 자폭함");
 
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
+            SoundManager.instance.SFXPlay("PlayerDamaged", damagedClip);
             hp -= 15;
             managerScript.UpdateHpSlider(hp);
             if (hp <= 0)
@@ -90,10 +95,8 @@ public class PlayerScript : MonoBehaviour
             }
             else
             {
-                //플레이어 깜빡거림 무적시간 3초
-
-                meshRenderer.material = Resources.Load<Material>("Materials/Damaged");
-                Invoke("ReturnMaterial", 0.1f);
+                OnDamaged();
+                Invoke("OnDamaged",1.5f);
             }
             Destroy(collision.gameObject);
         }
@@ -101,8 +104,18 @@ public class PlayerScript : MonoBehaviour
         
     }
 
-    void ReturnMaterial()
+    void OnDamaged()
     {
-        meshRenderer.material = Resources.Load<Material>("Materials/StarSparrow_White");
+        //플레이어 깜빡거림 무적시간 3초
+        isRespawnTime = !isRespawnTime;
+        if (isRespawnTime) //무적 타임 이펙트 (투명)
+        {
+            meshRenderer.material = Resources.Load<Material>("Materials/Damaged");
+        }
+        else
+        {
+            meshRenderer.material = Resources.Load<Material>("Materials/StarSparrow_White"); //무적 타임 종료(원래대로)
+        }
     }
+
 }

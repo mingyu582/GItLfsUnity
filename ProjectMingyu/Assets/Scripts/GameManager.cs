@@ -8,6 +8,8 @@ using System.IO;
 
 public class GameManager : MonoBehaviour
 {
+    public int stage;
+
     private float curSpawnDelay;
     private float fallingObjectTime;
     public GameObject fallingObject;
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         player = GameObject.Find("Player");
         spawnList = new List<Spawn>();
+        StageStart();
     }
     private void Start()
     {
@@ -45,7 +48,6 @@ public class GameManager : MonoBehaviour
 
         UpdateUI();
         CreateFallingObject();
-        ReadSpawnFile();
         if (curSpawnDelay > nextSpawnDelay && !spawnEnd)
         {
             SpawnEnemy();
@@ -78,7 +80,7 @@ public class GameManager : MonoBehaviour
         spawnIndex = 0;
         spawnEnd = false;
 
-        TextAsset textFile = Resources.Load("Stage 0") as TextAsset;
+        TextAsset textFile = Resources.Load("Stage "+ stage) as TextAsset;
         StringReader stringReader = new StringReader(textFile.text);
 
         while (stringReader != null)
@@ -95,12 +97,21 @@ public class GameManager : MonoBehaviour
             spawnData.type = line.Split(',')[1];
             spawnData.point = int.Parse(line.Split(',')[2]);
             spawnList.Add(spawnData);
-            print(spawnData+"dlcksrbqudtls");
+            print(spawnData.delay + " " + spawnData.type + " " + spawnData.point);
         }
 
         stringReader.Close();
 
         nextSpawnDelay = spawnList[0].delay;
+    }
+
+    public void StageStart()
+    {
+        ReadSpawnFile();
+    }
+    public void StageEnd()
+    {
+        stage++;
     }
 
     void CreateFallingObject()
@@ -149,14 +160,17 @@ public class GameManager : MonoBehaviour
         int enemyIndex = 0;
         switch (spawnList[spawnIndex].type)
         {
-            case "S":
+            case "0":
                 enemyIndex = 0;
                 break;
-            case "M":
+            case "1":
                 enemyIndex = 1;
                 break;
-            case "L":
+            case "2":
                 enemyIndex = 2;
+                break;
+            case "3":
+                enemyIndex = 3;
                 break;
             default:
                 break;
@@ -178,5 +192,7 @@ public class GameManager : MonoBehaviour
         }
         nextSpawnDelay = spawnList[spawnIndex].delay;
     }
+
+
 
 }

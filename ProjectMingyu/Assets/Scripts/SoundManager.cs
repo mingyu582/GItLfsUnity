@@ -42,11 +42,11 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
-    public void SetBGSoundVolume(float value)
+    /*public void SetBGSoundVolume(float value)
     {
         mixer.SetFloat("BGSoundVolume", Mathf.Log10(value) * 20);
         PlayerPrefs.SetFloat("BGSoundVolume", value);
-    }
+    }*/
     public void SFXPlay(string sfxName, AudioClip clip)
     {
         GameObject go = new GameObject(sfxName + "Sound");

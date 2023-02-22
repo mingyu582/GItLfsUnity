@@ -53,7 +53,6 @@ public class EnemyScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        print("aaa");
         if (collision.gameObject.tag == "PlayerBullet") //플레이어총알
         {
             OnHit(5);
