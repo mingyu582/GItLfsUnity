@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     {
         player = GameObject.Find("Player");
         spawnList = new List<Spawn>();
-        StageStart();
+        /////////////////////////////////////////////////////////StageStart();
     }
     private void Start()
     {
@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
         //spawn enemy
         if (curSpawnDelay > nextSpawnDelay && !spawnEnd)
         {
-            SpawnEnemy();
+            ///////////////////////////////////////////////////////////////////////SpawnEnemy();
             curSpawnDelay = 0;
         }
 
@@ -103,7 +103,6 @@ public class GameManager : MonoBehaviour
         while (stringReader != null)
         {
             string line = stringReader.ReadLine();
-            print("line: "+line);
 
             if (line == null)
             {
@@ -114,7 +113,6 @@ public class GameManager : MonoBehaviour
             spawnData.type = line.Split(',')[1];
             spawnData.point = int.Parse(line.Split(',')[2]);
             spawnList.Add(spawnData);
-            print(spawnData.delay + " " + spawnData.type + " " + spawnData.point);
         }
 
         stringReader.Close();
@@ -135,6 +133,15 @@ public class GameManager : MonoBehaviour
 
         //stage ¡ı∞°
         stage++;
+        if (stage == 2)
+        {
+            PlayerScript playerScript = player.GetComponent<PlayerScript>();
+            GameOver(playerScript.score);
+        }
+        else
+        {
+            Invoke("StageStart", 5);
+        }
     }
 
     void CreateFallingObject()
@@ -227,10 +234,12 @@ public class GameManager : MonoBehaviour
         if (bloodType == 0)
         {
             Instantiate(redBlood, spawnPoints[randomPos].position, Quaternion.identity);
+            bloodSpawnTime = 0;
         }
         else
         {
             Instantiate(whiteBlood, spawnPoints[randomPos].position, Quaternion.identity);
+            bloodSpawnTime = 0;
         }
     }
     void StageStartUI()

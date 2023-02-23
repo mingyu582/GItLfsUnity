@@ -25,4 +25,11 @@ public class WhiteBlood : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "PlayerBullet")
+        {
+            Destroy(other.gameObject);
+        }
+    }
 }
