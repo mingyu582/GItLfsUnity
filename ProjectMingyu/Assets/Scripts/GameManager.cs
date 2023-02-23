@@ -8,7 +8,7 @@ using System.IO;
 
 public class GameManager : MonoBehaviour
 {
-    public int stage;
+    private int stage = 1;
 
     private float curSpawnDelay;
     private float fallingObjectTime;
@@ -32,6 +32,16 @@ public class GameManager : MonoBehaviour
     public Text BGMValueText;
     public Text SFXValueText;
 
+    public GameObject redBlood;
+    public GameObject whiteBlood;
+    private float bloodSpawnTime;
+
+    public GameObject startStage;
+    public GameObject stageClear;
+    public Text StageText;
+    private bool stageFlag = false;
+    private bool clearFlag = false;
+
     private void Awake()
     {
         player = GameObject.Find("Player");
@@ -44,10 +54,16 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        bloodSpawnTime += Time.deltaTime;
         curSpawnDelay += Time.deltaTime;
 
         UpdateUI();
         CreateFallingObject();
+
+        //spawn blood
+        SpawnBlood();
+
+        //spawn enemy
         if (curSpawnDelay > nextSpawnDelay && !spawnEnd)
         {
             SpawnEnemy();
@@ -57,6 +73,7 @@ public class GameManager : MonoBehaviour
         //pause panel
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            print("sa;dlk");
             pausePanel.SetActive(true);
             Time.timeScale = 0f;
         }
@@ -107,10 +124,16 @@ public class GameManager : MonoBehaviour
 
     public void StageStart()
     {
+        //UI Load
+        StageStartUI();
+        //ReadSpawnFile
         ReadSpawnFile();
     }
     public void StageEnd()
     {
+        //Clear
+
+        //stage ¡ı∞°
         stage++;
     }
 
@@ -192,7 +215,49 @@ public class GameManager : MonoBehaviour
         }
         nextSpawnDelay = spawnList[spawnIndex].delay;
     }
+    void SpawnBlood()
+    {
+        int bloodType = Random.Range(0, 2);
+        int randomPos = Random.Range(0, 5);
+        float randomSpawnTime = Random.Range(10.0f, 15.0f);
+        if (bloodSpawnTime < randomSpawnTime)
+        {
+            return;
+        }
+        if (bloodType == 0)
+        {
+            Instantiate(redBlood, spawnPoints[randomPos].position, Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(whiteBlood, spawnPoints[randomPos].position, Quaternion.identity);
+        }
+    }
+    void StageStartUI()
+    {
+        stageFlag =!stageFlag;
 
+        if (stageFlag == true)
+        {
+            startStage.SetActive(true);
+            StageText.text = "STAGE " + stage; 
+        }
+        else
+        {
+            startStage.SetActive(false);
+        }
+    }
+    void StageEndUI()
+    {
+        clearFlag = !clearFlag;
 
-
+        if (clearFlag == true)
+        {
+            stageClear.SetActive(true);
+        }
+        else
+        {
+            stageClear.SetActive(false);
+        }
+    }
 }

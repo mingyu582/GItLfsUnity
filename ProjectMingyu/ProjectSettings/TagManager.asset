@@ -9,6 +9,8 @@ TagManager:
   - EnemyBullet
   - MainScene
   - Item
+  - RedBlood
+  - WhiteBlood
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - Enemy
   - Player
   - Item
-  - 
+  - Blood
   - 
   - 
   - 

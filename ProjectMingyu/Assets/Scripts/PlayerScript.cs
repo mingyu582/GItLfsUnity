@@ -7,9 +7,11 @@ public class PlayerScript : MonoBehaviour
     public AudioClip shotClip;
     public AudioClip damagedClip;
     MeshRenderer meshRenderer;
-    public GameObject playerBulletPrefab;
-    public Transform shotPoint;
+    public GameObject playerBulletPrefabA;
+    public GameObject playerBulletPrefabB;
+    public Transform[] shotPoint;
     public GameObject manager;
+    public GameObject bookShot;
 
     private float horizontal;
     private float vertical;
@@ -26,7 +28,9 @@ public class PlayerScript : MonoBehaviour
     //¿ì x
     public int score;
     public int hp = 100;
-    public int pain = 100;
+    public int pain = 0;
+    private int power = 1;
+    private int maxPower = 4;
 
     public bool isRespawnTime;
 
@@ -43,13 +47,39 @@ public class PlayerScript : MonoBehaviour
     {
         PlayerMove();
         shotDelay += Time.deltaTime;
-        if (Input.GetKey(KeyCode.J) && shotDelay >= maxShotDelay)
-        {
-            SoundManager.instance.SFXPlay("PlayerShot", shotClip);
-            Instantiate(playerBulletPrefab, shotPoint.position, Quaternion.Euler(-90.0f, 0, 0));
+        Fire();
+    }
 
-            shotDelay = 0f;
+    void Fire()
+    {
+        if (!Input.GetKey(KeyCode.J))
+        {
+            return;
         }
+        if (shotDelay < maxShotDelay)
+        {
+            return;
+        }
+        SoundManager.instance.SFXPlay("PlayerShot", shotClip);
+        switch (power)
+        {
+            case 1:
+                Instantiate(playerBulletPrefabA, shotPoint[1].position, Quaternion.Euler(-90.0f, 0, 0));
+                break;
+            case 2:
+                Instantiate(playerBulletPrefabA, shotPoint[0].position, Quaternion.Euler(-90.0f, 0, 0));
+                Instantiate(playerBulletPrefabA, shotPoint[2].position, Quaternion.Euler(-90.0f, 0, 0));
+                break;
+            case 3:
+                Instantiate(playerBulletPrefabA, shotPoint[0].position, Quaternion.Euler(-90.0f, 0, 0));
+                Instantiate(playerBulletPrefabB, shotPoint[2].position, Quaternion.Euler(-90.0f, 0, 0));
+                break;
+            case 4:
+                Instantiate(playerBulletPrefabB, shotPoint[0].position, Quaternion.Euler(-90.0f, 0, 0));
+                Instantiate(playerBulletPrefabB, shotPoint[2].position, Quaternion.Euler(-90.0f, 0, 0));
+                break;
+        }
+        shotDelay = 0f;
     }
     
 
@@ -99,10 +129,78 @@ public class PlayerScript : MonoBehaviour
                 Invoke("OnDamaged",1.5f);
             }
             Destroy(collision.gameObject);
+        } else if (collision.gameObject.tag == "Item")
+        {
+            ItemScript itemScript = collision.gameObject.GetComponent<ItemScript>();
+            switch (itemScript.type)
+            {
+                case "book":
+                    bookShot.SetActive(true);
+                    Invoke("OffBookShot", 4f);
+                    GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+                    for (int i = 0; i < enemies.Length; i++)
+                    {
+                        EnemyScript enemyScript = enemies[i].GetComponent<EnemyScript>();
+                        enemyScript.OnHit(1000);
+                    }
+
+                    GameObject[] bullets = GameObject.FindGameObjectsWithTag("EnemyBullet");
+                    for (int i = 0; i < bullets.Length; i++)
+                    {
+                        Destroy(bullets[i]);
+                    }
+                    break;
+                case "healPotion":
+                    hp += 20;
+                    break;
+                case "powerUp":
+                    if (power != maxPower)
+                    {
+                        power++;
+                    }
+                    break;
+                case "painkiller":
+                    if (pain >= 20)
+                    {
+                        pain -= 20;
+                    }
+                    break;
+                case "sheild":
+                    break;
+                case "supportRobot":
+                    break;
+            }
+            Destroy(collision.gameObject);
         }
-        
-        
+        else if (collision.gameObject.tag == "RedBlood")
+        {
+            SoundManager.instance.SFXPlay("PlayerDamaged", damagedClip);
+            pain += 20;
+            managerScript.UpdatePainSlider(pain);
+            Destroy(collision.gameObject);
+            if (pain <= 0)
+            {
+                print("ºñÇà±â ÆÄ±«µÊ");
+                print(score);
+                DataManager.curScore = score;
+                managerScript.GameOver(score);
+                Destroy(gameObject);
+            }
+            else
+            {
+                OnDamaged();
+                Invoke("OnDamaged", 1.5f);
+            }
+        }
+
+
     }
+
+    void OffBookShot()
+    {
+        bookShot.SetActive(false);
+    }
+
 
     void OnDamaged()
     {

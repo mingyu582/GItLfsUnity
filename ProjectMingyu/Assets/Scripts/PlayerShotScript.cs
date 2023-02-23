@@ -16,6 +16,12 @@ public class PlayerShotScript : MonoBehaviour
         Destroy(gameObject);
     }
 
-    
-
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.tag == "WhiteBlood")
+        {
+            WhiteBlood whiteBlood = collision.gameObject.GetComponent<WhiteBlood>();
+            whiteBlood.OnHitBlood(2);
+        }
+    }
 }
