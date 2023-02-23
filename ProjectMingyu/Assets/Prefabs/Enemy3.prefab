@@ -109,8 +109,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42951a8de188e54186523c362549b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyBullet: {fileID: 1656205560423842, guid: 2d009ca22ab0fc141ade283e835e506a, type: 3}
+  enemyBulletA: {fileID: 1656205560423842, guid: 2d009ca22ab0fc141ade283e835e506a, type: 3}
+  enemyBulletB: {fileID: 1656205560423842, guid: 26c880d30c3d6a0429ce033a13fddd4e, type: 3}
   type: 3
+  EnemyPrefabs:
+  - {fileID: 1041803199959140, guid: 5f7d5f60379571b4ab916f85aae80a71, type: 3}
+  - {fileID: 1040074329139878, guid: fa8aadfb07ca2034188c69c6f2ab4624, type: 3}
+  - {fileID: 1724874857677222, guid: 6807a4fbab15c3444aa44ff82bcbe872, type: 3}
+  - {fileID: 1967302699866656585}
+  patternIndex: 0
+  curPatternCount: 0
+  maxPatternCount: 0800000001000000070000000a000000
 --- !u!54 &-8916912145608265993
 Rigidbody:
   m_ObjectHideFlags: 0

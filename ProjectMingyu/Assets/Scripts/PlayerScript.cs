@@ -110,7 +110,7 @@ public class PlayerScript : MonoBehaviour
             return;
         GameManager managerScript = manager.GetComponent<GameManager>();
 
-        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
+        if (collision.gameObject.tag == "Enemy")
         {
             SoundManager.instance.SFXPlay("PlayerDamaged", damagedClip);
             hp -= 15;
@@ -128,8 +128,35 @@ public class PlayerScript : MonoBehaviour
                 OnDamaged();
                 Invoke("OnDamaged",1.5f);
             }
+            GameObject enemyObject = collision.gameObject;
+            EnemyScript enemyScript = enemyObject.GetComponent<EnemyScript>();
+            if (enemyScript.type != 3)
+            {
+                Destroy(collision.gameObject);
+            }
+            
+        }
+        else if (collision.gameObject.tag == "EnemyBullet")
+        {
+            SoundManager.instance.SFXPlay("PlayerDamaged", damagedClip);
+            hp -= 15;
+            managerScript.UpdateHpSlider(hp);
+            if (hp <= 0)
+            {
+                print("ºñÇà±â ÆÄ±«µÊ");
+                print(score);
+                DataManager.curScore = score;
+                managerScript.GameOver(score);
+                Destroy(gameObject);
+            }
+            else
+            {
+                OnDamaged();
+                Invoke("OnDamaged", 1.5f);
+            }
             Destroy(collision.gameObject);
-        } else if (collision.gameObject.tag == "Item")
+        }
+        else if (collision.gameObject.tag == "Item")
         {
             ItemScript itemScript = collision.gameObject.GetComponent<ItemScript>();
             switch (itemScript.type)
@@ -141,7 +168,15 @@ public class PlayerScript : MonoBehaviour
                     for (int i = 0; i < enemies.Length; i++)
                     {
                         EnemyScript enemyScript = enemies[i].GetComponent<EnemyScript>();
-                        enemyScript.OnHit(1000);
+                        if (enemyScript.type == 3)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            enemyScript.OnHit(1000);
+                        }
+                        
                     }
 
                     GameObject[] bullets = GameObject.FindGameObjectsWithTag("EnemyBullet");
@@ -151,7 +186,16 @@ public class PlayerScript : MonoBehaviour
                     }
                     break;
                 case "healPotion":
-                    hp += 20;
+                    if (hp >= 80)
+                    {
+                        hp = 100;
+                        managerScript.UpdateHpSlider(hp);
+                    }
+                    else
+                    {
+                        hp += 20;
+                        managerScript.UpdateHpSlider(hp);
+                    }
                     break;
                 case "powerUp":
                     if (power != maxPower)
@@ -163,6 +207,12 @@ public class PlayerScript : MonoBehaviour
                     if (pain >= 20)
                     {
                         pain -= 20;
+                        managerScript.UpdatePainSlider(pain);
+                    }
+                    else
+                    {
+                        pain = 0;
+                        managerScript.UpdatePainSlider(pain);
                     }
                     break;
                 case "sheild":

@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public Text painText;
 
     public GameObject pausePanel;
+    private float pauseTime;
     public Text BGMValueText;
     public Text SFXValueText;
 
@@ -42,11 +43,14 @@ public class GameManager : MonoBehaviour
     private bool stageFlag = false;
     private bool clearFlag = false;
 
+    public Text countDownText;
+    private float timer = 32.5f;
+
     private void Awake()
     {
         player = GameObject.Find("Player");
         spawnList = new List<Spawn>();
-        /////////////////////////////////////////////////////////StageStart();
+        StageStart();
     }
     private void Start()
     {
@@ -54,8 +58,16 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        timer -= Time.deltaTime;
+        pauseTime += Time.deltaTime;
         bloodSpawnTime += Time.deltaTime;
         curSpawnDelay += Time.deltaTime;
+
+        if (timer < 0f)
+        {
+            timer = 0;
+        }
+        countDownText.text = "STAGE : " + stage +"\n"+"00 : " + Mathf.Round(timer).ToString();
 
         UpdateUI();
         CreateFallingObject();
@@ -66,14 +78,13 @@ public class GameManager : MonoBehaviour
         //spawn enemy
         if (curSpawnDelay > nextSpawnDelay && !spawnEnd)
         {
-            ///////////////////////////////////////////////////////////////////////SpawnEnemy();
+            SpawnEnemy();
             curSpawnDelay = 0;
         }
 
         //pause panel
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && pauseTime > 2f)
         {
-            print("sa;dlk");
             pausePanel.SetActive(true);
             Time.timeScale = 0f;
         }
@@ -122,18 +133,25 @@ public class GameManager : MonoBehaviour
 
     public void StageStart()
     {
+        if (stage > 2)
+        {
+            PlayerScript playerScript = player.GetComponent<PlayerScript>();
+            GameOver(playerScript.score);
+        }
+        print("stageStart");
         //UI Load
+        stageFlag = false;
+        Invoke("StageStartUI", 3f);
         StageStartUI();
         //ReadSpawnFile
         ReadSpawnFile();
     }
     public void StageEnd()
     {
+        clearFlag = false;
+        StageEndUI();
         //Clear
-
-        //stage 증가
-        stage++;
-        if (stage == 2)
+        if (stage > 2)
         {
             PlayerScript playerScript = player.GetComponent<PlayerScript>();
             GameOver(playerScript.score);
@@ -141,7 +159,11 @@ public class GameManager : MonoBehaviour
         else
         {
             Invoke("StageStart", 5);
+            timer = 32.5f;
         }
+        //stage 증가
+        stage++;
+
     }
 
     void CreateFallingObject()
@@ -187,6 +209,9 @@ public class GameManager : MonoBehaviour
     
     void SpawnEnemy()
     {
+        print("delay: " + spawnList[spawnIndex].delay);
+        print("type: " + spawnList[spawnIndex].type);
+        print("point: " + spawnList[spawnIndex].point);
         int enemyIndex = 0;
         switch (spawnList[spawnIndex].type)
         {
@@ -242,6 +267,10 @@ public class GameManager : MonoBehaviour
             bloodSpawnTime = 0;
         }
     }
+    void SetFalseStageUI()
+    {
+        startStage.SetActive(false);
+    }
     void StageStartUI()
     {
         stageFlag =!stageFlag;
@@ -249,12 +278,17 @@ public class GameManager : MonoBehaviour
         if (stageFlag == true)
         {
             startStage.SetActive(true);
-            StageText.text = "STAGE " + stage; 
+            StageText.text = "STAGE " + stage;
+            Invoke("SetFalseStageUI", 3f);
         }
         else
         {
             startStage.SetActive(false);
         }
+    }
+    void SetFalseStageClearUI()
+    {
+        stageClear.SetActive(false);
     }
     void StageEndUI()
     {
@@ -263,6 +297,7 @@ public class GameManager : MonoBehaviour
         if (clearFlag == true)
         {
             stageClear.SetActive(true);
+            Invoke("SetFalseStageClearUI", 3f);
         }
         else
         {

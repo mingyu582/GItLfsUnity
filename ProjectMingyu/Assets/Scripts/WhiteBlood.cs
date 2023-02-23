@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WhiteBlood : MonoBehaviour
 {
-    private float speed = 2f;
+    private float speed = 0.8f;
     private int hp = 5;
     private int ranItem;
 

@@ -7,6 +7,7 @@ public class EnemyShotScript : MonoBehaviour
     private GameObject player;
     private float speed = 1f;
     Vector3 dirVec;
+    public string bulletType;
 
     private void Start()
     {
@@ -18,11 +19,22 @@ public class EnemyShotScript : MonoBehaviour
     }
     private void Update()
     {
-        EnemyShot();
+        if (bulletType == "A")
+        {
+            EnemyShotA();
+        } else if (bulletType == "B")
+        {
+            EnemyShotB();
+        }
+        
     }
 
-    void EnemyShot()
+    void EnemyShotA()
     {
         transform.Translate(dirVec * speed * Time.deltaTime);
+    }
+    void EnemyShotB()
+    {
+        
     }
 }
